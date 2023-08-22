@@ -1,0 +1,32 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+
+Vagrant.configure("2") do |config|
+
+    config.vm.box = "generic/ubuntu2204"
+  
+    config.vm.synced_folder ".", "/vagrant", disabled: true
+
+    # Network
+    config.vm.network "private_network", ip: "192.168.xx.xx"
+    config.vm.network "public_network", ip: "192.168.xx.xx"
+    ## DHCP
+    config.vm.network "public_network"
+
+    # VirtualBox config
+    config.vm.provider "virtualbox" do |v|
+        v.gui = true
+        v.name = my_vm
+        v.linked_clone = true
+        v.memory = 1024
+        v.cpus = 2
+    end
+
+
+    # Provisioinier Ansible
+    config.vm.provision :ansible do |a|
+        a.playbook = "playbook.yml"
+    end
+
+end
