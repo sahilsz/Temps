@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appname
+  namespace: namespace
+  labels:
+    app: appname
+spec:
+  selector:
+    matchLabels:
+      app: appname
+  replicas: 1 
+  template:
+    metadata:
+      labels:
+        app: appname 
+    spec:
+      containers:
+      
+      - name: helloworld 
+        image: helloworld:latest 
+        # resources:
+        #   limits:
+        #     memory: 512Mi
+        #     cpu: "500m"
+        #     cpu: "1"
+        #   requests:
+        #     memory: 256Mi
+        #     cpu: "0.2"
+        ports:
+        - containerPort: 8080 
+        volumeMounts:
+        - mountPath: /var/www/html
+          name: vol0
+      volumes:
+      - name: vol0
+        persistentVolumeClaim:
+          claimName: pvc0
