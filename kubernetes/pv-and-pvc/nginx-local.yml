@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+        volumeMounts:
+          - name: nginx-config
+            mountPath: /etc/nginx
+          - name: local
+            mountPath: /usr/share/nginx/html # path inside the container file system
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: nginx-cm
+        - name: local
+          hostPath: # type of volume, represent directory on the host
+            path: /var/nginx/server # path to directory on host
